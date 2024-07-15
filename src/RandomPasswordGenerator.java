@@ -9,6 +9,7 @@ import java.util.Random;
 public class RandomPasswordGenerator {
     private JPanel RandomPasswordGenerator;
     private JButton generateButton;
+    private JButton copyButton;
     private JTextField textField1;
 
     public RandomPasswordGenerator() {
@@ -28,6 +29,17 @@ public class RandomPasswordGenerator {
                 }
 
                 textField1.setText(new String(pass));
+            }
+        });
+
+        copyButton.addActionListener(new ActionListener (){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String password = textField1.getText();
+                StringSelection stringSelection = new StringSelection(password);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+                JOptionPane.showMessageDialog(null, "Password Copied");
             }
         });
     }

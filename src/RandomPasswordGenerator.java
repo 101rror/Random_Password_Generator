@@ -1,45 +1,55 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class RandomPasswordGenerator {
     private JPanel RandomPasswordGenerator;
     private JButton generateButton;
     private JButton copyButton;
-    private JTextField textField1;
+    private JTextField passwordField;
+    private JTextField lengthField;
 
     public RandomPasswordGenerator() {
         generateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    int len = Integer.parseInt(lengthField.getText());
 
-                Random random = new Random();
-                String chars = "1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm./?!@#$%&*";
-                int len = random.nextInt(8, 13);
+                    if (len < 8 || len > 12) {
+                        JOptionPane.showMessageDialog(null, "Please enter a length between 8 and 12");
+                        return;
+                    }
 
-                char[] pass = new char[len];
-                int len1 = chars.length();
+                    Random random = new Random();
+                    String chars = "1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm./?!@#$%&*";
 
-                for(int i = 0; i < len; i++){
-                    pass[i] = chars.charAt(random.nextInt(len1));
+                    char[] pass = new char[len];
+                    int len1 = chars.length();
+
+                    for (int i = 0; i < len; i++) {
+                        pass[i] = chars.charAt(random.nextInt(len1));
+                    }
+
+                    passwordField.setText(new String(pass));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number");
                 }
-
-                textField1.setText(new String(pass));
             }
         });
 
-        copyButton.addActionListener(new ActionListener (){
+        copyButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
-                String password = textField1.getText();
+            public void actionPerformed(ActionEvent e) {
+                String password = passwordField.getText();
                 StringSelection stringSelection = new StringSelection(password);
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
-                JOptionPane.showMessageDialog(null, "Password Copied");
+                JOptionPane.showMessageDialog(null, "Password copied to clipboard");
             }
         });
     }
@@ -49,7 +59,6 @@ public class RandomPasswordGenerator {
 
         ImageIcon icon = new ImageIcon("src/icon.png");
         Image originalImage = icon.getImage();
-
         Image resizedImage = originalImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         frame.setIconImage(resizedImage);
 
